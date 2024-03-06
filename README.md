@@ -1,5 +1,13 @@
 *Probado en Debian
 
+INSTALACION PREVIA
+
+$sudo apt install dialog   - instalar dialog
+$touch /usr/bin/smenu      - crear archivo
+$chmod +x /usr/bin/smenu   - importante dar permisos
+$vim /usr/bin/smenu        - para modificar
+
+
 PASOS PARA CREAR EL MENÚ:
 
 1) Crear los scripts que desee que el usuario ejecute y dejarlos en un path determinado
