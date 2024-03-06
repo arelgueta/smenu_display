@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# while-menu-dialog: a menu driven system information program
+
+DIALOG_CANCEL=1
+DIALOG_ESC=255
+HEIGHT=0
+WIDTH=0
+
+display_result() {
+  dialog --title "$1" \
+    --no-collapse \
+    --msgbox "$result" 0 0
+}
+
+while true; do
+  exec 3>&1
+  selection=$(dialog \
+    --backtitle "Universidad de Mendoza - Departamento de tecnología" \
+    --title "Menu de Opciones" \
+    --clear \
+    --cancel-label "Salir" \
+    --menu "Seleccionar Comando:" $HEIGHT $WIDTH 4 \
+    "1" "Agregar Host - Soft Phone" \
+    "2" "Ver reglas iptable" \
+    "3" "Modificar Listado de Host" \
+    "4" "Reiniciar iptables" \
+    2>&1 1>&3)
+  exit_status=$?
+  exec 3>&-
+  case $exit_status in
+    $DIALOG_CANCEL)
+      clear
+      echo "Program terminated."
+      exit
+      ;;
+    $DIALOG_ESC)
+      clear
+      echo "Program aborted." >&2
+      exit 1
+      ;;
+  esac
+
+  case $selection in
+    1 )
+      cd /home/scripts/ ; clear ; sudo ./habilita_tel_soft.sh
+      #result=$(echo "Hostname: $HOSTNAME"; uptime)
+      #display_result "Host agregado correctamente"
+      ;;
+    2 )
+      cd /home/scripts/ ; clear
+      #cd /home/scripts/ ; clear ; sudo ./reglas_iptables.sh
+      result=$(sudo ./reglas_iptables.sh)
+      display_result "Reglas"
+      #display_result 
+      ;;
+    3 )
+      cd /home/scripts/ ; clear ; sudo nano tel_ip_list.txt
+      #result=$(echo "Hostname: $HOSTNAME"; uptime)
+      #display_result "Base de Datos y Usuario Creados"
+      ;;
+    4 )
+      cd /home/scripts/ ; clear ; sudo ./reiniciar_reglas.sh
+      result=$("")
+      display_result "Iptables reestablecido"
+      ;;
+  esac
+done
+
